@@ -1,9 +1,38 @@
 var express = require('express');
-var router = express.Router();
+const mongoose  = require("mongoose");
+const plm = require('passport-local-mongoose')
+mongoose.connect("mongodb://localhost:27017/pinterest");
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const userSchema = new mongoose.Schema
+({
 
-module.exports = router;
+    username:{
+        type:String,
+        required:true,
+        unique:true,
+    },
+    password:{
+        type:String,
+        unique:true,
+    },
+    dp:{
+        type:String,
+        
+    },
+    posts: [{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'Post'
+    }],
+    email:{
+      type:String,
+      required:true,
+      unique:true
+    },
+    fullname:{
+      type:String,
+      required:true
+    }
+})
+
+userSchema.plugin(plm);
+module.exports = mongoose.model('User',userSchema)
