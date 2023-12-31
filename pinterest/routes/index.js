@@ -13,7 +13,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/profile', isLoggedIn, function(req, res, next) {
-  res.send("profile");
+  console.log("Inside /profile route handler");
+  res.render("profile");
 });
 
 router.get('/login', function(req, res, next) {
