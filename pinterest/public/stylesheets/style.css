@@ -148,3 +148,10 @@ hr {
   background-color: rgb(241, 236, 236);
   border-radius: 20px;
 }
+
+.error{
+  font-size: 500;
+  color: red;
+  text-transform: capitalize;
+  margin: 10px 0;
+}

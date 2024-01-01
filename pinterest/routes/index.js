@@ -12,14 +12,21 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/profile', isLoggedIn, function(req, res, next) {
-  console.log("Inside /profile route handler");
-  res.render("profile");
+router.get('/login', function(req, res, next) {
+  res.render("login",{ error : req.flash("error")});
 });
 
-router.get('/login', function(req, res, next) {
-  res.render("login");
+router.get('/feed' , (req,res,next)=>{
+ res.render('feed')
+})
+router.get('/profile', isLoggedIn, async function(req, res, next) {
+ const user = await userModel.findOne({
+  username: req.session.passport.user
+ })
+  res.render("profile",{user:user});
 });
+
+
 
 router.post("/register", (req, res) => {
   const userData = new userModel({
@@ -36,18 +43,20 @@ router.post("/register", (req, res) => {
     })
     .catch(err => {
       console.error(err);
-      res.render('register'); // Adjust the view name accordingly
+      res.render('register',{error:err.message}); // Adjust the view name accordingly
     });
 });
 
 router.post("/login", passport.authenticate("local", {
   successRedirect: "/profile",
   failureRedirect: "/login", // Corrected the failureRedirect route
-}));
+  failureFlash:true
+}),function (req,res) {
+});
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) return next();
-  res.redirect("/");
+  res.redirect("/login");
 }
 
 router.get("/logout", (req, res) => {
